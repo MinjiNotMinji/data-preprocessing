@@ -1,9 +1,10 @@
 from os import walk, rename
 import whisper
-from pydub import AudioSegment
+
+root = "/home/minji.tts/Dataset"
 
 file_list = []
-for (_, _, filenames) in walk("/home/minji.tts/Friendshiping/wavs"):
+for (_, _, filenames) in walk(f"{root}/wavs"):
     for file in filenames:
         if file.endswith("wav"):
             file_list.append(file)
@@ -12,13 +13,13 @@ for (_, _, filenames) in walk("/home/minji.tts/Friendshiping/wavs"):
 
 model = whisper.load_model("large")
 
-index = 1
-with open("Friendshiping/metadata.csv", "w") as csv:
+index = 101
+with open(f"{root}/metadata.csv", "w") as csv:
     for file in sorted(file_list):
-        result = model.transcribe(f"/home/minji.tts/Friendshiping/wavs/{file}")
+        result = model.transcribe(f"{root}/wavs/{file}")
 
-        csv.write(f"audio{index}|{result['text'].strip()}|{result['text'].strip()}\n")
+        csv.write(f"audio{index}|{result['text'].strip()}\n")
         
-        rename(f"/home/minji.tts/Friendshiping/wavs/{file}", f"/home/minji.tts/Friendshiping/wavs/audio{index}.wav")
+        rename(f"{root}/wavs/{file}", f"{root}/wavs/audio{index}.wav")
 
         index += 1
